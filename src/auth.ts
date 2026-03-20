@@ -8,6 +8,8 @@ import { randomBytes } from "crypto";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  secret: process.env.AUTH_SECRET,
+  trustHost: true,
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
