@@ -1,0 +1,39 @@
+"use client";
+
+import { useTranslations, useLocale } from "next-intl";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { FileText } from "lucide-react";
+
+export default function TermsPage() {
+  const t = useTranslations('Legal');
+  const locale = useLocale();
+  const isRtl = locale === 'ar';
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-1 pt-32 pb-20">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="bg-surface/30 border border-surface rounded-[2.5rem] p-10 lg:p-16">
+            <div className="flex items-center gap-4 mb-8">
+               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                  <FileText size={28} />
+               </div>
+               <h1 className="text-4xl font-black">{t('terms_title')}</h1>
+            </div>
+            <p className="text-foreground-muted mb-8 italic">{t('last_updated')}</p>
+            <div className="prose prose-invert max-w-none space-y-6 text-lg">
+               <p>{t('terms_content')}</p>
+               <h3 className="text-xl font-bold text-foreground">{t('terms_p1_title')}</h3>
+               <p>{t('terms_p1_content')}</p>
+               <h3 className="text-xl font-bold text-foreground">{t('terms_p2_title')}</h3>
+               <p>{t('terms_p2_content')}</p>
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
