@@ -32,11 +32,10 @@ export default function Home() {
   const locale = useLocale();
   const isRtl = locale === 'ar';
   const [signals, setSignals] = useState<any[]>([]);
-  const [activeSymbol, setActiveSymbol] = useState("OANDA:XAUUSD");
+  const [activeSymbol, setActiveSymbol] = useState("TVC:GOLD");
 
   const symbols = useMemo(() => [
-    { id: "OANDA:XAUUSD", name: isRtl ? "ذهب" : "Gold", icon: "💎" },
-    { id: "BINANCE:BTCUSDT", name: isRtl ? "بيتكوين" : "Bitcoin", icon: "₿" },
+    { id: "TVC:GOLD", name: isRtl ? "ذهب" : "Gold", icon: "💎" },
     { id: "FX:EURUSD", name: isRtl ? "يورو" : "Euro", icon: "€" },
     { id: "TVC:USOIL", name: isRtl ? "نفط" : "Oil", icon: "🛢️" },
     { id: "TVC:XAGUSD", name: isRtl ? "فضة" : "Silver", icon: "🪙" },
