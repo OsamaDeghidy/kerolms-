@@ -38,7 +38,6 @@ export default function Home() {
     { id: "TVC:GOLD", name: isRtl ? "ذهب" : "Gold", icon: "💎" },
     { id: "FX:EURUSD", name: isRtl ? "يورو" : "Euro", icon: "€" },
     { id: "TVC:USOIL", name: isRtl ? "نفط" : "Oil", icon: "🛢️" },
-    { id: "TVC:XAGUSD", name: isRtl ? "فضة" : "Silver", icon: "🪙" },
   ], [isRtl]);
 
   useEffect(() => {
