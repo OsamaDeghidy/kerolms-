@@ -42,7 +42,7 @@ export function getSecureVideoUrl(videoId: string, studentName: string = "") {
   const token = generateBunnyToken(libraryId, videoId, securityKey);
   
   // Base URL
-  let url = `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?token=${token}&autoplay=false`;
+  let url = `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?token=${token}&autoplay=0`;
   
   // Add watermark if provided (requires enabling Dynamic Watermarking in Bunny Dashboard)
   if (studentName) {

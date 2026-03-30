@@ -17,7 +17,7 @@ const BunnyPlayer: React.FC<BunnyPlayerProps> = ({
         src={src}
         loading="lazy"
         className="absolute top-0 left-0 w-full h-full border-0"
-        allow="accelerometer; gyroscope; autocomplete; encrypted-media; picture-in-picture;"
+        allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;"
         allowFullScreen
       ></iframe>
     </div>
