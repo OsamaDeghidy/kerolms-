@@ -1,4 +1,8 @@
 {
+  "Metadata": {
+    "testimonials_title": "Kero Trade | Student Testimonials",
+    "testimonials_desc": "Watch and read success stories from Kero Trade Academy students."
+  },
   "Navigation": {
     "home": "Home",
     "about": "About Us",
@@ -45,13 +49,24 @@
   },
   "Contact": {
     "title": "Contact Us",
-    "subtitle": "We are always happy to answer your inquiries. Send us a message and we will respond as soon as possible.",
+    "title_rich": "Get in <span>Touch</span>",
+    "subtitle": "We are always happy to answer your inquiries. These are the official and only channels for Kero Trade.",
     "back_to_home": "Back to Home",
-    "whatsapp": "WhatsApp",
-    "whatsapp_desc": "Direct contact with us",
-    "telegram": "Telegram",
-    "telegram_desc": "Our channel and technical support",
-    "email": "Email",
+    "whatsapp_group": "WhatsApp Group",
+    "whatsapp_group_desc": "Join our WhatsApp community",
+    "whatsapp_group_link": "https://chat.whatsapp.com/EnABTRAB8WXBJB00DUAqum",
+    "whatsapp_personal": "WhatsApp (Direct)",
+    "whatsapp_personal_desc": "+971 50 203 6022",
+    "telegram_personal": "Telegram (Direct Contact)",
+    "telegram_personal_desc": "@Kirellos_Amin",
+    "telegram_channel": "Telegram Channel",
+    "telegram_channel_desc": "t.me/kerotrade",
+    "tiktok": "TikTok",
+    "tiktok_link": "https://www.tiktok.com/@kerotrade",
+    "youtube": "YouTube",
+    "youtube_link": "https://youtube.com/@kerotrade",
+    "warning_title": "IMPORTANT WARNING",
+    "warning_desc": "Beware of anyone impersonating Kero or using the name 'Kero Trade' for communication. Official and exclusive communication is only through the links and accounts mentioned above.",
     "send_message": "Send a Message",
     "form": {
       "name": "Name",
@@ -64,20 +79,20 @@
   },
   "About": {
     "title": "Who is Kero?",
-    "subtitle": "A professional trader and certified trainer with years of experience in financial markets. Founder of Kero Trade Academy, specializing in providing the strongest trading methodologies based on merging advanced classical analysis with wave analysis to extract the most accurate entry and exit points.",
+    "subtitle": "Kero Trade is a professional trader and mentor in the financial markets with over 6 years of experience in market analysis and price action understanding.\n\nDuring this journey, he has trained nearly 500 students from various Arab countries, helping them develop their trading skills and build a clear vision of market direction.\n\nKero Trade's approach relies on practical experience and direct application within the market, not just theories. Focus is placed on understanding the general trend using Advanced Wave Analysis and determining precise entry and exit points through Advanced Classical Analysis.",
     "back_to_home": "Back to Home",
-    "vision_title": "Our Vision",
-    "vision_desc": "Creating a generation of professional traders capable of reading the market accurately away from randomness and luck.",
+    "vision_title": "Our Vision & Goal",
+    "vision_desc": "At Kero Trade, we aim to build a generation of traders capable of understanding the market consciously and professionally, away from randomness and blind recommendations, by teaching a clear methodology that helps the trader make their own decisions with confidence.",
     "experience_title": "Practical Experience",
-    "experience_desc": "We don't just provide theoretical explanations, we share real trades with you and apply step-by-step with you in the live market.",
+    "experience_desc": "The Kero Trade team has over 6 years of experience in the financial markets, training more than 500 traders from various Arab countries, with direct practical application on market movement rather than just theoretical explanation.",
     "methodology_title": "Unique Educational Approach",
-    "methodology_desc": "The 'Advanced Wave and Advanced Classical' methodology specifically designed to shorten the path for you to reach professionalism in the fastest time.",
-    "student_count": "+10,000 Students",
-    "student_desc": "Students joined us from all over the Arab world and achieved amazing results.",
+    "methodology_desc": "We rely on merging Advanced Wave Analysis with Advanced Classical Analysis to determine the general market trend and extract the most accurate entry and exit points, in a simplified and organized educational style that helps the trader reach professionalism quickly.",
+    "student_count": "500+ Students",
+    "student_desc": "Students trained from various Arab countries who developed their skills with us.",
     "success_stories": "+500 Success Stories",
     "success_desc": "Traders moved from loss to consistent profitability thanks to developed methodologies.",
-    "experience_years": "7+ Years Experience",
-    "mastery_desc": "Full mastery of financial markets"
+    "experience_years": "6+ Years Experience",
+    "mastery_desc": "Full mastery of financial markets and price action analysis"
   },
   "Testimonials": {
     "title": "Student Testimonials & Success Stories",
@@ -94,7 +109,24 @@
     "back_to_home": "Back to Home",
     "video_review_label": "Student Video Review #{number}",
     "login_now": "Login Now",
-    "submit_another": "Submit another review"
+    "submit_another": "Submit another review",
+    "list": {
+      "1": {
+        "name": "Ahmed Salem",
+        "role": "Student",
+        "content": "Best trading course! Wave analysis with Kero changed my market view."
+      },
+      "2": {
+        "name": "Sara Mohamed",
+        "role": "Trader",
+        "content": "Price Action with Kero is very accurate. Thank you for this value."
+      },
+      "3": {
+        "name": "Youssef Ali",
+        "role": "Student",
+        "content": "I was lost in classical analysis but now trades are much clearer."
+      }
+    }
   },
   "Analyses": {
     "title": "Live Analyses & Daily Lessons",
@@ -275,7 +307,7 @@
   "HomePage": {
     "title": "Trading Mastery Starts Here | Kero Trade",
     "badge": "Institutional Trading Environment",
-    "hero_title": "Master Trading <span>Like a Pro</span> <br />",
+    "hero_title": "Master Trading <span>Like a Pro</span>",
     "hero_subtitle": "Learn the art of trading through comprehensive curriculums designed to take you from scratch to international levels.",
     "trust_rich": "Join <span>+2,500</span> successful traders worldwide",
     "courses_button": "Explore Courses",

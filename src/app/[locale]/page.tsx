@@ -23,20 +23,27 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getAnalysesAction } from "@/app/actions/analysis";
+import TradingViewWidget from "@/components/TradingViewWidget";
 
 export default function Home() {
   const t = useTranslations('HomePage');
   const locale = useLocale();
   const isRtl = locale === 'ar';
-  const [showCongrats, setShowCongrats] = useState(false);
   const [signals, setSignals] = useState<any[]>([]);
+  const [activeSymbol, setActiveSymbol] = useState("OANDA:XAUUSD");
+
+  const symbols = useMemo(() => [
+    { id: "OANDA:XAUUSD", name: isRtl ? "ذهب" : "Gold", icon: "💎" },
+    { id: "BINANCE:BTCUSDT", name: isRtl ? "بيتكوين" : "Bitcoin", icon: "₿" },
+    { id: "FX:EURUSD", name: isRtl ? "يورو" : "Euro", icon: "€" },
+    { id: "TVC:USOIL", name: isRtl ? "نفط" : "Oil", icon: "🛢️" },
+    { id: "TVC:XAGUSD", name: isRtl ? "فضة" : "Silver", icon: "🪙" },
+  ], [isRtl]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowCongrats(true), 5000);
     getAnalysesAction().then(res => setSignals(res.slice(0, 5)));
-    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -69,13 +76,12 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="space-y-6"
             >
-              <h1 className="text-6xl lg:text-8xl font-black italic tracking-tighter leading-[0.9] uppercase">
+              <h1 className="text-3xl lg:text-5xl font-black italic tracking-tighter leading-[1.1] uppercase">
                 {t.rich('hero_title', {
-                  br: () => <br />,
                   span: (chunks) => <span className="text-primary text-glow-primary">{chunks}</span>
                 })}
               </h1>
-              <p className={`text-foreground-muted text-xl lg:text-2xl max-w-xl leading-relaxed italic font-medium border-primary/30 pl-6 ${isRtl ? 'border-r-4 pr-6 pl-0 text-right' : 'border-l-4 text-left'}`}>
+              <p className={`text-foreground-muted text-base lg:text-lg max-w-xl leading-relaxed italic font-medium border-primary/30 pl-6 ${isRtl ? 'border-r-4 pr-6 pl-0 text-right' : 'border-l-4 text-left'}`}>
                 {t('hero_subtitle')}
               </p>
             </motion.div>
@@ -88,21 +94,21 @@ export default function Home() {
             >
               <Link 
                 href="/courses" 
-                className="group relative px-12 py-6 rounded-[2rem] bg-primary text-background font-black transition-all flex items-center gap-4 text-xl shadow-[0_20px_40px_rgba(var(--primary-rgb),0.3)] hover:scale-105 active:scale-95 overflow-hidden"
+                className="group relative px-8 py-4 rounded-[1.5rem] bg-primary text-background font-black transition-all flex items-center gap-4 text-lg shadow-[0_20px_40px_rgba(var(--primary-rgb),0.3)] hover:scale-105 active:scale-95 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
                 <span className="relative z-10">{t('courses_button')}</span>
-                <div className="relative z-10 w-10 h-10 rounded-full bg-background/20 flex items-center justify-center group-hover:translate-x-2 transition-transform">
-                   {isRtl ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
+                <div className="relative z-10 w-8 h-8 rounded-full bg-background/20 flex items-center justify-center group-hover:translate-x-2 transition-transform">
+                   {isRtl ? <ArrowLeft size={20} /> : <ArrowRight size={20} />}
                 </div>
               </Link>
               
               <Link 
                 href="#what-we-do" 
-                className={`px-10 py-6 rounded-[2rem] border border-surface bg-surface/20 backdrop-blur-xl hover:bg-surface transition-all flex items-center gap-3 font-black text-lg group ${isRtl ? 'flex-row-reverse' : ''}`}
+                className={`px-8 py-4 rounded-[1.5rem] border border-surface bg-surface/20 backdrop-blur-xl hover:bg-surface transition-all flex items-center gap-3 font-black text-base group ${isRtl ? 'flex-row-reverse' : ''}`}
               >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                   <PlayCircle size={28} className="text-primary" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                   <PlayCircle size={24} className="text-primary" />
                 </div>
                 {t('watch_tutorial')}
               </Link>
@@ -144,7 +150,41 @@ export default function Home() {
                className="relative z-10 w-full aspect-[4/5] lg:aspect-square bg-surface/30 backdrop-blur-2xl rounded-[4rem] border border-surface p-10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden"
              >
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -mr-32 -mt-32"></div>
-                <TradingChartVisual />
+                
+                <div className="w-full h-full flex flex-col">
+                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-20">
+                      <div className="flex items-center gap-4">
+                         <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                            <TrendingUp size={20} />
+                         </div>
+                         <div>
+                            <h4 className="text-lg font-black tracking-tighter italic uppercase">{symbols.find(s => s.id === activeSymbol)?.name} LIVE</h4>
+                            <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1.5">
+                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> {isRtl ? "بيانات حقيقية / نظام اسمي" : "SYSTEM NOMINAL / LIVE DATA"}
+                            </p>
+                         </div>
+                      </div>
+                      <div className="flex gap-2">
+                         {symbols.slice(0, 2).map((s) => (
+                            <button 
+                               key={s.id}
+                               onClick={() => setActiveSymbol(s.id)}
+                               className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase transition-all border ${activeSymbol === s.id ? 'bg-primary text-background border-primary' : 'bg-surface/50 text-foreground-muted border-surface hover:border-primary/30'}`}
+                            >
+                               {s.name}
+                            </button>
+                         ))}
+                      </div>
+                   </div>
+                   <div className="flex-1 rounded-2xl overflow-hidden border border-white/5 bg-black/40 relative z-10 group/chart">
+                      <TradingViewWidget 
+                        symbol={activeSymbol} 
+                        locale={locale} 
+                        height="100%" 
+                        autosize 
+                      />
+                   </div>
+                </div>
                 
                 {/* Real-time Signals Float */}
                 <div className="absolute top-10 right-10 space-y-4 pointer-events-none">
@@ -167,35 +207,6 @@ export default function Home() {
                    ))}
                 </div>
 
-                {/* Congrats Popup */}
-                <AnimatePresence>
-                  {showCongrats && (
-                    <motion.div 
-                      initial={{ scale: 0, opacity: 0, y: 50 }}
-                      animate={{ scale: 1, opacity: 1, y: 0 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 bg-primary text-background p-8 rounded-[2.5rem] shadow-[0_30px_60px_rgba(var(--primary-rgb),0.5)] flex flex-col items-center gap-4 border-t border-white/30"
-                    >
-                      <div className="w-20 h-20 rounded-full bg-background flex items-center justify-center shadow-inner">
-                         <Trophy size={40} className="text-primary animate-bounce" />
-                      </div>
-                      <div className="text-center">
-                         <h4 className="text-3xl font-black italic tracking-tighter uppercase leading-none">
-                           {t('target_reached')}
-                         </h4>
-                         <p className="text-lg font-bold opacity-80 italic">
-                           {t('student_profit')}
-                         </p>
-                      </div>
-                      <button 
-                         onClick={() => setShowCongrats(false)}
-                         className="px-6 py-2 rounded-full bg-background/10 hover:bg-background/20 text-[10px] font-black uppercase tracking-widest transition-colors"
-                      >
-                         {t('dismiss')}
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
              </motion.div>
 
              {/* Background Decoration */}
@@ -204,20 +215,8 @@ export default function Home() {
         </section>
 
         {/* Signals Ticker */}
-        <div className="bg-surface/30 backdrop-blur-md border-y border-surface py-6 overflow-hidden relative z-20">
-           <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
-              {[...Array(10)].map((_, i) => (
-                <div key={i} className={`flex items-center gap-6 text-sm font-black uppercase italic tracking-tighter ${isRtl ? 'flex-row-reverse' : ''}`}>
-                   <div className={`flex items-center gap-2 text-primary ${isRtl ? 'flex-row-reverse' : ''}`}><Zap size={16} /> {t('live_signals')}</div>
-                   <div className="flex items-center gap-2">BTC/USDT <span className="text-emerald-500">+4.2%</span></div>
-                   <div className="w-2 h-2 rounded-full bg-surface"></div>
-                   <div className="flex items-center gap-2">GOLD <span className="text-rose-500">-1.1%</span></div>
-                   <div className="w-2 h-2 rounded-full bg-surface"></div>
-                   <div className="flex items-center gap-2">ETH/USDT <span className="text-emerald-500">+12.5%</span></div>
-                   <div className="w-2 h-2 rounded-full bg-surface"></div>
-                </div>
-              ))}
-           </div>
+        <div className="bg-surface/30 backdrop-blur-md border-y border-surface py-2 overflow-hidden relative z-20 h-16 flex items-center">
+            <TradingViewWidget type="ticker" locale={locale} height={48} />
         </div>
 
         {/* Trust Metrics Section */}
@@ -237,13 +236,13 @@ export default function Home() {
               <div className={`inline-flex items-center gap-2 text-primary font-black uppercase text-xs tracking-widest italic ${isRtl ? 'flex-row-reverse' : ''}`}>
                  <div className="w-8 h-px bg-primary"></div> {t('values_badge')}
               </div>
-              <h2 className="text-5xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none">
+              <h2 className="text-2xl lg:text-4xl font-black uppercase italic tracking-tighter leading-tight">
                 {t.rich('features_title', {
                   span: (chunks) => <span className="text-primary text-glow-primary">{chunks}</span>
                 })}
               </h2>
             </div>
-            <p className={`text-foreground-muted text-xl max-w-md font-medium italic border-surface ${isRtl ? 'border-r-4 pr-8 text-right' : 'border-l-4 pl-8 text-left'}`}>
+            <p className={`text-foreground-muted text-base lg:text-lg max-w-md font-medium italic border-surface ${isRtl ? 'border-r-4 pr-8 text-right' : 'border-l-4 pl-8 text-left'}`}>
               {t('features_subtitle')}
             </p>
           </div>
@@ -270,12 +269,46 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Asset Grid Section */}
+        <section className="container mx-auto px-6 py-32 relative z-10">
+           <div className={`flex items-center justify-between mb-16 ${isRtl ? 'flex-row-reverse' : ''}`}>
+              <h2 className="text-3xl lg:text-4xl font-black italic uppercase tracking-tighter">
+                 {isRtl ? <>مراقبة <span className="text-primary">الأسواق</span> المباشرة</> : <>Live <span className="text-primary">Market</span> Intelligence</>}
+              </h2>
+              <div className="w-32 h-1 bg-primary/20 rounded-full"></div>
+           </div>
+           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {symbols.slice(2).map((s) => (
+                 <div key={s.id} className="bg-surface/30 backdrop-blur-xl border border-surface rounded-[3rem] p-8 space-y-6 hover:border-primary/30 transition-all group overflow-hidden relative">
+                    <div className="flex items-center justify-between relative z-10">
+                       <div className="flex items-center gap-4">
+                          <div className="text-3xl">{s.icon}</div>
+                          <h4 className="text-xl font-black italic uppercase">{s.name}</h4>
+                       </div>
+                       <button 
+                          onClick={() => {
+                            setActiveSymbol(s.id);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-background transition-all"
+                       >
+                          <TrendingUp size={20} />
+                       </button>
+                    </div>
+                    <div className="h-48 rounded-2xl overflow-hidden border border-white/5">
+                       <TradingViewWidget symbol={s.id} type="mini-chart" locale={locale} />
+                    </div>
+                 </div>
+              ))}
+           </div>
+        </section>
+
         {/* Course Explorer Teaser */}
         <section className="container mx-auto px-6 py-32 bg-surface/10 rounded-[5rem] border border-surface/50 mb-32 relative z-10 overflow-hidden group">
            <div className="absolute top-0 left-0 w-full h-full bg-primary/5 -translate-y-full group-hover:translate-y-0 transition-transform duration-1000"></div>
            <div className={`flex flex-col lg:flex-row items-center justify-between gap-16 relative z-10 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
               <div className={`space-y-8 max-w-lg ${isRtl ? 'text-right' : 'text-left'}`}>
-                 <h2 className="text-5xl font-black italic uppercase tracking-tighter leading-none">
+                 <h2 className="text-3xl lg:text-4xl font-black italic uppercase tracking-tighter leading-tight">
                     {t.rich('evolution_title', {
                       span: (chunks) => <span className="text-primary">{chunks}</span>
                     })}
@@ -321,113 +354,13 @@ function StatCard({ label, val, icon, color }: { label: string, val: string, ico
             {icon}
          </div>
          <div className="space-y-1">
-            <h4 className="text-3xl font-black italic tracking-tighter">{val}</h4>
+            <h4 className="text-2xl font-black italic tracking-tighter">{val}</h4>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground-muted">{label}</p>
          </div>
       </div>
    );
 }
 
-function TradingChartVisual() {
-  const [data, setData] = useState<any[]>([]);
-
-  useEffect(() => {
-    const generateData = () => {
-      let lastClose = 100;
-      return Array.from({ length: 25 }).map((_, i) => {
-        const open = lastClose;
-        const change = (Math.random() - 0.4) * 30; // Biased upwards
-        const close = open + change;
-        const high = Math.max(open, close) + Math.random() * 8;
-        const low = Math.min(open, close) - Math.random() * 8;
-        lastClose = close;
-        return { open, high, low, close, volume: Math.random() * 100 };
-      });
-    };
-    setData(generateData());
-    
-    const interval = setInterval(() => {
-      setData(prev => {
-        const newData = [...prev.slice(1)];
-        const last = prev[prev.length - 1];
-        const open = last.close;
-        const change = (Math.random() - 0.4) * 30;
-        const close = open + change;
-        const high = Math.max(open, close) + Math.random() * 8;
-        const low = Math.min(open, close) - Math.random() * 8;
-        newData.push({ open, high, low, close, volume: Math.random() * 100 });
-        return newData;
-      });
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden">
-      {/* HUD Header */}
-      <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/5 relative z-20">
-         <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-               <TrendingUp size={20} />
-            </div>
-            <div>
-               <h4 className="text-lg font-black tracking-tighter italic">MARKET ENGINE V2</h4>
-               <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> SYSTEM NOMINAL / LIVE DATA
-               </p>
-            </div>
-         </div>
-         <div className="text-right">
-            <p className="text-2xl font-black font-mono tracking-tighter text-glow-primary">68,432.10</p>
-            <p className="text-[10px] font-black text-foreground-muted italic transition-all">+2,44(0.42%)</p>
-         </div>
-      </div>
-      
-      {/* Chart Area */}
-      <div className="flex-1 flex items-end gap-[4px] relative z-10 px-4">
-        {data.map((item, i) => {
-          const isUp = item.close >= item.open;
-          const color = isUp ? "emerald-500" : "rose-500";
-          const maxVal = Math.max(...data.map(d => d.high));
-          const minVal = Math.min(...data.map(d => d.low));
-          const range = maxVal - minVal;
-          
-          const bodyTop = ((maxVal - Math.max(item.open, item.close)) / range) * 100;
-          const bodyHeight = (Math.abs(item.open - item.close) / range) * 100;
-          const wickTop = ((maxVal - item.high) / range) * 100;
-          const wickHeight = ((item.high - item.low) / range) * 100;
-
-          return (
-            <div key={i} className="flex-1 relative h-full flex flex-col justify-start">
-              {/* Wick */}
-              <div 
-                className={`absolute left-1/2 -translate-x-1/2 bg-${color} opacity-40`}
-                style={{ top: `${wickTop}%`, height: `${wickHeight}%`, width: '1px' }}
-              ></div>
-              {/* Body */}
-              <motion.div 
-                layout
-                className={`absolute left-0 right-0 rounded-sm bg-${color} shadow-[0_0_15px_rgba(var(--${isUp ? 'emerald' : 'rose'}-rgb),0.3)]`}
-                style={{ 
-                  top: `${bodyTop}%`, 
-                  height: `${Math.max(bodyHeight, 2)}%`,
-                  '--emerald-rgb': '16, 185, 129',
-                  '--rose-rgb': '244, 63, 94' 
-                } as any}
-              ></motion.div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Grid Overlay */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-        backgroundSize: '40px 40px'
-      }}></div>
-    </div>
-  );
-}
 
 function TradingChartAnimation() {
   return (

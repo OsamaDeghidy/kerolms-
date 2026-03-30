@@ -3,21 +3,55 @@
 import { motion } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import { useTranslations, useLocale } from "next-intl";
-import { ArrowLeft, ArrowRight, Quote, Star, Video, Play, MessageSquare, Send } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, ArrowRight, Video, MessageSquare, Send, Star, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import BunnyPlayer from "@/components/BunnyPlayer";
+import { getSecureAction } from "@/app/actions/bunny";
+
+// The 11 student testimonial video IDs provided by the user
+const VIDEO_REVIEW_IDS = [
+  "5d4eef79-8e6a-4f81-9590-9b6ef1072170",
+  "1a32c69e-a0a0-462a-93c3-8febdc3e0767",
+  "863b26bc-8444-4337-bbfd-f41b8e06f7d9",
+  "8c6789f5-f155-40e3-b781-d428d6a1534d",
+  "978d4705-e26f-497f-a483-8ea0f8c74225",
+  "6ab3f27f-b927-4ee1-84d0-f9064529abd2",
+  "9f7abada-937e-4029-b024-8efb83b4c8ca",
+  "bbbfb872-c862-4ba7-aaf0-8ffa8e130636",
+  "b19c19ff-8a6c-4dce-84f7-0fe88c1d4943",
+  "61af0043-2882-439d-afc9-ad4550a56738",
+  "657e3b75-6c7f-4d64-8c3f-dfb5d6f2f2c0"
+];
 
 export default function TestimonialsContent() {
   const t = useTranslations('Testimonials');
   const locale = useLocale();
   const isRtl = locale === 'ar';
   const [submitted, setSubmitted] = useState(false);
-  const isLoggedIn = true; // Student session check
+  const [videoUrls, setVideoUrls] = useState<Record<string, string>>({});
+  const [loadingVideos, setLoadingVideos] = useState(true);
+  const isLoggedIn = true; // Student session check (placeholder)
 
-  const testimonials = [
-    { id: 1, name: t('list.1.name'), role: t('list.1.role'), content: t('list.1.content'), rating: 5, avatar: "AS" },
-    { id: 2, name: t('list.2.name'), role: t('list.2.role'), content: t('list.2.content'), rating: 5, avatar: "SM" },
-    { id: 3, name: t('list.3.name'), role: t('list.3.role'), content: t('list.3.content'), rating: 5, avatar: "YA" },
-  ];
+  useEffect(() => {
+    async function fetchVideoUrls() {
+      const urls: Record<string, string> = {};
+      try {
+        // Fetch secure URLs for all videos in parallel
+        await Promise.all(
+          VIDEO_REVIEW_IDS.map(async (id) => {
+            const url = await getSecureAction(id);
+            urls[id] = url;
+          })
+        );
+        setVideoUrls(urls);
+      } catch (error) {
+        console.error("Error fetching video URLs:", error);
+      } finally {
+        setLoadingVideos(false);
+      }
+    }
+    fetchVideoUrls();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,76 +77,69 @@ export default function TestimonialsContent() {
             </p>
           </div>
 
-          {/* Video Testimonials Slider (Grid for now) */}
+          {/* Video Testimonials Section */}
           <section className="mb-32">
-             <h2 className="text-3xl font-bold mb-10 flex items-center gap-3">
-                <Video className="text-primary" />
-                {t('video_testimonials')}
-             </h2>
-             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[1, 2, 3].map((i) => (
-                   <motion.div 
-                     key={i}
-                     whileHover={{ y: -10 }}
-                     className="aspect-[9/16] bg-surface/50 rounded-[2.5rem] border border-surface overflow-hidden relative group cursor-pointer shadow-2xl"
-                   >
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent z-10"></div>
-                      <div className="absolute inset-0 flex items-center justify-center z-20">
-                         <div className="w-20 h-20 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Play size={32} className="text-primary fill-primary ml-1" />
-                         </div>
-                      </div>
-                      <div className="absolute bottom-10 left-8 right-8 z-20">
-                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-background text-sm">
-                               {i === 1 ? 'M' : i === 2 ? 'K' : 'A'}
-                            </div>
-                            <span className="font-black text-lg">{t('video_review_label', { number: i })}</span>
-                         </div>
-                      </div>
-                   </motion.div>
-                ))}
+             <div className="flex items-center justify-between mb-12">
+                <h2 className="text-3xl font-bold flex items-center gap-3">
+                   <Video className="text-primary" />
+                   {t('video_testimonials')}
+                </h2>
+                <div className="px-4 py-2 rounded-xl bg-primary/5 text-primary text-sm font-black border border-primary/10">
+                   {VIDEO_REVIEW_IDS.length} Student Reviews
+                </div>
              </div>
-          </section>
 
-          {/* Text Testimonials */}
-          <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
-            {testimonials.map((test) => (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                key={test.id} 
-                className="p-10 rounded-[2.5rem] bg-surface/30 border border-surface hover:border-primary/30 transition-all relative overflow-hidden group"
-              >
-                <Quote className={`absolute top-10 ${isRtl ? 'right-10' : 'left-10'} text-primary/5 w-24 h-24 ${isRtl ? 'rotate-180' : ''}`} />
-                
-                <div className="flex gap-1 text-primary mb-6 relative z-10">
-                  {[...Array(test.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-current" />
+             {loadingVideos ? (
+               <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <Loader2 className="w-12 h-12 text-primary animate-spin" />
+                  <p className="text-foreground-muted font-bold animate-pulse">Decrypting Student Reviews...</p>
+               </div>
+             ) : (
+               <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  {VIDEO_REVIEW_IDS.map((id, index) => (
+                     <motion.div 
+                       initial={{ opacity: 0, y: 30 }}
+                       whileInView={{ opacity: 1, y: 0 }}
+                       transition={{ delay: index * 0.05 }}
+                       viewport={{ once: true }}
+                       key={id}
+                                               className="aspect-video bg-surface/50 rounded-3xl border border-surface overflow-hidden relative group shadow-2xl"
+                     >
+                        {videoUrls[id] ? (
+                          <div className="w-full h-full relative">
+                             <BunnyPlayer src={videoUrls[id]} />
+                          </div>
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-red-500/50">
+                             Failed to load video
+                          </div>
+                        )}
+                        
+                        <div className="absolute top-3 right-3 z-20">
+                           <div className="px-2 py-1 rounded-full bg-background/50 backdrop-blur-md border border-surface text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                              Student Review
+                           </div>
+                        </div>
+
+                        <div className="absolute bottom-4 left-6 right-6 z-20 pointer-events-none">
+                           <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 flex items-center justify-center font-black text-primary text-xs">
+                                 S{index + 1}
+                              </div>
+                              <span className="font-black text-base text-white drop-shadow-md">
+                                 {t('video_review_label', { number: index + 1 })}
+                              </span>
+                           </div>
+                        </div>
+                     </motion.div>
                   ))}
-                </div>
-                
-                <p className="text-foreground-muted text-lg leading-relaxed mb-10 relative z-10 font-medium italic">
-                  "{test.content}"
-                </p>
-                
-                <div className="flex items-center gap-4 relative z-10 border-t border-surface/50 pt-8">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black group-hover:bg-primary group-hover:text-background transition-colors">
-                    {test.avatar}
-                  </div>
-                  <div>
-                    <h4 className="font-black text-foreground">{test.name}</h4>
-                    <span className="text-sm text-foreground-muted font-bold uppercase tracking-wider">{test.role}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+               </div>
+             )}
           </section>
 
           {/* Feedback Form Section */}
           <section className="max-w-4xl mx-auto">
-             <div className="bg-gradient-to-br from-surface to-background border border-surface rounded-[3rem] p-10 lg:p-20 shadow-2xl relative overflow-hidden">
+             <div className="bg-gradient-to-br from-surface to-background border border-surface rounded-[3rem] p-10 lg:p-14 shadow-2xl relative overflow-hidden">
                 <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px]"></div>
                 
                 <div className="text-center mb-12 relative z-10">
@@ -150,7 +177,7 @@ export default function TestimonialsContent() {
                                   {[1,2,3,4,5].map(s => (
                                     <Star key={s} size={24} className="text-primary cursor-pointer hover:scale-110 transition-transform fill-current" />
                                   ))}
-                               </div>
+                                </div>
                             </div>
                          </div>
                          <div className="space-y-3">
