@@ -110,8 +110,11 @@ export default function TestimonialsContent() {
                              <BunnyPlayer src={videoUrls[id]} />
                           </div>
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-red-500/50">
-                             Failed to load video
+                          <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-surface/80 backdrop-blur-sm">
+                             <Video className="w-8 h-8 text-red-500/50 mb-3" />
+                             <p className="text-xs font-black uppercase text-red-500/50 tracking-widest leading-tight">
+                                Stream configuration missing or invalid video ID
+                             </p>
                           </div>
                         )}
                         
