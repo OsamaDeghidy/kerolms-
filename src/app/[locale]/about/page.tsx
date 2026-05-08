@@ -1,15 +1,13 @@
-"use client";
-
-import { motion } from "framer-motion";
+import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { useTranslations, useLocale } from "next-intl";
 import { ArrowLeft, ArrowRight, Award, BookOpen, Target, Users, TrendingUp, Star } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import * as motion from "framer-motion/client";
 
-export default function AboutPage() {
-  const t = useTranslations('About');
-  const locale = useLocale();
+export default async function AboutPage() {
+  const t = await getTranslations('About');
+  const locale = await getLocale();
   const isRtl = locale === 'ar';
 
   return (
@@ -39,10 +37,10 @@ export default function AboutPage() {
                  </div>
                  <div className="absolute bottom-10 left-10 right-10 bg-background/60 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
                     <h1 className="text-4xl font-bold mb-4">
-                  {t.rich('title', {
-                    span: (chunks) => <span className="text-primary">{chunks}</span>
-                  })}
-                </h1>
+                      {t.rich('title', {
+                        span: (chunks) => <span className="text-primary">{chunks}</span>
+                      })}
+                    </h1>
                     <div className="flex items-center gap-4 mb-2">
                        <div className="flex -space-x-3">
                           {[1,2,3].map(i => (
@@ -54,12 +52,10 @@ export default function AboutPage() {
                     <p className="text-xs text-foreground-muted">{t('student_desc')}</p>
                  </div>
               </div>
-              {/* Decoration */}
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-[80px] -z-10 animate-pulse"></div>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-[80px] -z-10 animate-pulse delay-700"></div>
             </motion.div>
             
-            {/* Content Body */}
             <div className="space-y-10">
               <motion.div
                 initial={{ opacity: 0, x: isRtl ? 50 : -50 }}
@@ -94,7 +90,6 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Stats / Showcase Section */}
           <div className="grid md:grid-cols-3 gap-8 mb-20">
              <StatCard 
                icon={<Users className="text-primary" />} 

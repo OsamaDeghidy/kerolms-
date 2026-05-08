@@ -10,46 +10,62 @@ export default function Navbar() {
   const { data: session, status } = useSession();
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-surface">
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-2xl font-bold font-inter tracking-tighter text-primary">
-          <Link href="/">
-            KERO <span className="text-foreground">TRADE</span>
+    <header className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-surface/50 h-24 flex items-center transition-all duration-300">
+      <div className="container mx-auto px-6 flex items-center justify-between">
+        <div className="flex items-center gap-3 text-3xl font-black italic tracking-tighter uppercase transition-transform hover:scale-105 active:scale-95">
+          <Link href="/" className="flex items-center gap-1 group">
+            <span className="text-primary text-glow-primary">KERO</span> 
+            <span className="text-foreground transition-colors group-hover:text-primary">TRADE</span>
           </Link>
         </div>
-        <nav className="hidden md:flex gap-8 text-sm font-medium">
-          <Link href="/" className="hover:text-primary transition-colors">{t('home')}</Link>
-          <Link href="/about" className="hover:text-primary transition-colors">{t('about')}</Link>
-          <Link href="/courses" className="hover:text-primary transition-colors">{t('courses')}</Link>
-          <Link href="/analyses" className="hover:text-primary transition-colors">{t('analyses')}</Link>
-          <Link href="/testimonials" className="hover:text-primary transition-colors">{t('testimonials')}</Link>
-          <Link href="/contact" className="hover:text-primary transition-colors">{t('contact')}</Link>
+
+        <nav className="hidden lg:flex items-center gap-10 text-[11px] font-black uppercase tracking-[0.2em] italic">
+          <NavLink href="/">{t('home')}</NavLink>
+          <NavLink href="/about">{t('about')}</NavLink>
+          <NavLink href="/courses">{t('courses')}</NavLink>
+          <NavLink href="/analyses">{t('analyses')}</NavLink>
+          <NavLink href="/testimonials">{t('testimonials')}</NavLink>
+          <NavLink href="/contact">{t('contact')}</NavLink>
         </nav>
-        <div className="flex items-center gap-4">
-          <LanguageSwitcher />
+
+        <div className="flex items-center gap-6">
+          <div className="scale-90 opacity-80 hover:opacity-100 transition-opacity">
+            <LanguageSwitcher />
+          </div>
           
+          <div className="h-8 w-px bg-surface/50 hidden md:block"></div>
+
           {status === "authenticated" ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <Link 
                 href={session.user?.role === "admin" ? "/admin" : "/dashboard"} 
-                className="px-6 py-2.5 rounded-full bg-primary text-background hover:bg-primary-hover transition-all text-sm font-bold shadow-lg"
+                className="px-8 py-3 rounded-2xl bg-primary text-background hover:shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)] transition-all text-xs font-black uppercase tracking-widest italic"
               >
                 {session.user?.role === "admin" ? t('admin_dashboard') : t('my_account')}
               </Link>
               <button 
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="text-foreground-muted hover:text-red-500 font-bold text-xs"
+                className="text-foreground-muted hover:text-rose-500 font-black text-[10px] uppercase tracking-widest italic transition-colors"
               >
                 {t('logout')}
               </button>
             </div>
           ) : (
-            <Link href="/auth/login" className="px-6 py-2.5 rounded-full border border-surface hover:border-primary transition-colors text-sm font-medium flex items-center justify-center">
-              {t('login')}
+            <Link href="/auth/login" className="px-8 py-3 rounded-2xl border border-surface bg-surface/30 hover:border-primary/50 hover:bg-primary/5 transition-all text-xs font-black uppercase tracking-widest italic text-foreground group">
+              <span className="group-hover:text-primary transition-colors">{t('login')}</span>
             </Link>
           )}
         </div>
       </div>
     </header>
   );
+}
+
+function NavLink({ href, children }: { href: string, children: React.ReactNode }) {
+  return (
+    <Link href={href} className="relative py-2 group overflow-hidden">
+       <span className="relative z-10 hover:text-primary transition-colors duration-300">{children}</span>
+       <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+    </Link>
+  )
 }

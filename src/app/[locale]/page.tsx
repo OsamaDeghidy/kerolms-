@@ -1,48 +1,37 @@
-"use client";
-
 import { Link } from "@/i18n/routing";
-import { useTranslations, useLocale } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import { getTranslations, getLocale } from "next-intl/server";
 import { 
-  ArrowLeft, 
-  PlayCircle, 
-  Star, 
-  TrendingUp, 
+  Users, 
+  BarChart3, 
+  Target, 
   ShieldCheck, 
   Video, 
-  Users, 
+  TrendingUp, 
   ArrowRight, 
-  DollarSign, 
-  ChevronRight, 
-  Globe, 
-  Zap, 
-  Activity,
-  BarChart3,
-  Trophy,
-  Target
+  ArrowLeft 
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useState, useEffect, useMemo } from "react";
 import { getAnalysesAction } from "@/app/actions/analysis";
 import TradingViewWidget from "@/components/TradingViewWidget";
+import HeroSection from "@/components/home/HeroSection";
+import TradingChartAnimation from "@/components/home/TradingChartAnimation";
+import { StatCard, FeatureCard } from "@/components/home/Cards";
 
-export default function Home() {
-  const t = useTranslations('HomePage');
-  const locale = useLocale();
+export default async function Home() {
+  const t = await getTranslations('HomePage');
+  const locale = await getLocale();
   const isRtl = locale === 'ar';
-  const [signals, setSignals] = useState<any[]>([]);
-  const [activeSymbol, setActiveSymbol] = useState("TVC:GOLD");
+  
+  // Fetch data on server
+  const signals = await getAnalysesAction();
+  const limitedSignals = signals.slice(0, 5);
 
-  const symbols = useMemo(() => [
+  const symbols = [
     { id: "TVC:GOLD", name: isRtl ? "ذهب" : "Gold", icon: "💎" },
     { id: "FX:EURUSD", name: isRtl ? "يورو" : "Euro", icon: "€" },
     { id: "TVC:USOIL", name: isRtl ? "نفط" : "Oil", icon: "🛢️" },
-  ], [isRtl]);
-
-  useEffect(() => {
-    getAnalysesAction().then(res => setSignals(res.slice(0, 5)));
-  }, []);
+  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -56,161 +45,12 @@ export default function Home() {
            <TradingChartAnimation />
         </div>
 
-        {/* Hero Section: Institutional Grade */}
-        <section className="container mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center min-h-[90vh] relative z-10 pt-32 lg:pt-0">
-          <div className="space-y-10">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-surface/50 backdrop-blur-md border border-surface text-primary text-xs font-black uppercase tracking-[0.2em] shadow-xl ${isRtl ? 'flex-row-reverse' : ''}`}
-            >
-              <Activity size={14} className="animate-pulse" />
-              <span>{t('badge')}</span>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-6"
-            >
-              <h1 className="text-3xl lg:text-5xl font-black italic tracking-tighter leading-[1.1] uppercase">
-                {t.rich('hero_title', {
-                  span: (chunks) => <span className="text-primary text-glow-primary">{chunks}</span>
-                })}
-              </h1>
-              <p className={`text-foreground-muted text-base lg:text-lg max-w-xl leading-relaxed italic font-medium border-primary/30 pl-6 ${isRtl ? 'border-r-4 pr-6 pl-0 text-right' : 'border-l-4 text-left'}`}>
-                {t('hero_subtitle')}
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-wrap gap-6"
-            >
-              <Link 
-                href="/courses" 
-                className="group relative px-8 py-4 rounded-[1.5rem] bg-primary text-background font-black transition-all flex items-center gap-4 text-lg shadow-[0_20px_40px_rgba(var(--primary-rgb),0.3)] hover:scale-105 active:scale-95 overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
-                <span className="relative z-10">{t('courses_button')}</span>
-                <div className="relative z-10 w-8 h-8 rounded-full bg-background/20 flex items-center justify-center group-hover:translate-x-2 transition-transform">
-                   {isRtl ? <ArrowLeft size={20} /> : <ArrowRight size={20} />}
-                </div>
-              </Link>
-              
-              <Link 
-                href="#what-we-do" 
-                className={`px-8 py-4 rounded-[1.5rem] border border-surface bg-surface/20 backdrop-blur-xl hover:bg-surface transition-all flex items-center gap-3 font-black text-base group ${isRtl ? 'flex-row-reverse' : ''}`}
-              >
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                   <PlayCircle size={24} className="text-primary" />
-                </div>
-                {t('watch_tutorial')}
-              </Link>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="pt-10 flex flex-col sm:flex-row items-center gap-10 border-t border-surface/50"
-            >
-              <div className="flex -space-x-4">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="w-14 h-14 rounded-full border-4 border-background overflow-hidden relative bg-surface shadow-2xl">
-                     <img src={`https://i.pravatar.cc/150?u=${i}`} alt="user" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all cursor-pointer" />
-                  </div>
-                ))}
-              </div>
-              <div className={`space-y-1 ${isRtl ? 'text-right' : 'text-left'}`}>
-                <div className={`flex items-center gap-1 text-primary ${isRtl ? 'flex-row-reverse' : ''}`}>
-                  {[1,2,3,4,5].map((i) => <Star key={i} size={18} className="fill-current" />)}
-                  <span className={`${isRtl ? 'mr-2' : 'ml-2'} text-foreground font-black text-xl`}>5.0</span>
-                </div>
-                <div className="text-sm text-foreground-muted font-bold italic">
-                   {t.rich('trust_rich', {
-                     span: (chunks) => <span className="text-foreground font-black text-glow-primary tracking-tighter">{chunks}</span>
-                   })}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-          
-          {/* Main Visual: Interactive Terminal */}
-          <div className="relative group perspective-1000">
-             <motion.div 
-               initial={{ opacity: 0, rotateY: 20, rotateX: 10 }}
-               animate={{ opacity: 1, rotateY: 0, rotateX: 0 }}
-               transition={{ duration: 1, ease: "easeOut" }}
-               className="relative z-10 w-full aspect-[4/5] lg:aspect-square bg-surface/30 backdrop-blur-2xl rounded-[4rem] border border-surface p-10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden"
-             >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -mr-32 -mt-32"></div>
-                
-                <div className="w-full h-full flex flex-col">
-                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5 relative z-20">
-                      <div className="flex items-center gap-4">
-                         <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                            <TrendingUp size={20} />
-                         </div>
-                         <div>
-                            <h4 className="text-lg font-black tracking-tighter italic uppercase">{symbols.find(s => s.id === activeSymbol)?.name} LIVE</h4>
-                            <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1.5">
-                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> {isRtl ? "بيانات حقيقية / نظام اسمي" : "SYSTEM NOMINAL / LIVE DATA"}
-                            </p>
-                         </div>
-                      </div>
-                      <div className="flex gap-2">
-                         {symbols.slice(0, 2).map((s) => (
-                            <button 
-                               key={s.id}
-                               onClick={() => setActiveSymbol(s.id)}
-                               className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase transition-all border ${activeSymbol === s.id ? 'bg-primary text-background border-primary' : 'bg-surface/50 text-foreground-muted border-surface hover:border-primary/30'}`}
-                            >
-                               {s.name}
-                            </button>
-                         ))}
-                      </div>
-                   </div>
-                   <div className="flex-1 rounded-2xl overflow-hidden border border-white/5 bg-black/40 relative z-10 group/chart">
-                      <TradingViewWidget 
-                        symbol={activeSymbol} 
-                        locale={locale} 
-                        height="100%" 
-                        autosize 
-                      />
-                   </div>
-                </div>
-                
-                {/* Real-time Signals Float */}
-                <div className="absolute top-10 right-10 space-y-4 pointer-events-none">
-                   {signals.slice(0, 2).map((signal, idx) => (
-                     <motion.div 
-                        initial={{ x: 50, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 1 + (idx * 0.2) }}
-                        key={signal._id} 
-                        className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center gap-4 shadow-2xl"
-                     >
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black ${signal.direction === 'buy' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-rose-500/20 text-rose-500'}`}>
-                           {signal.direction === 'buy' ? 'LONG' : 'SHORT'}
-                        </div>
-                        <div>
-                           <p className="text-[10px] font-black uppercase text-foreground-muted tracking-widest">{signal.symbol}</p>
-                           <p className="text-xs font-bold font-mono">Entry @ {signal.entryPrice}</p>
-                        </div>
-                     </motion.div>
-                   ))}
-                </div>
-
-             </motion.div>
-
-             {/* Background Decoration */}
-             <div className="absolute -inset-10 border border-primary/10 rounded-[5rem] -z-10 animate-pulse"></div>
-          </div>
-        </section>
+        {/* Hero Section: Render as Client for interactivity */}
+        <HeroSection 
+          isRtl={isRtl} 
+          signals={limitedSignals} 
+          locale={locale} 
+        />
 
         {/* Signals Ticker */}
         <div className="bg-surface/30 backdrop-blur-md border-y border-surface py-2 overflow-hidden relative z-20 h-16 flex items-center">
@@ -276,22 +116,19 @@ export default function Home() {
               <div className="w-32 h-1 bg-primary/20 rounded-full"></div>
            </div>
            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {symbols.slice(2).map((s) => (
+              {symbols.slice(1).map((s) => (
                  <div key={s.id} className="bg-surface/30 backdrop-blur-xl border border-surface rounded-[3rem] p-8 space-y-6 hover:border-primary/30 transition-all group overflow-hidden relative">
                     <div className="flex items-center justify-between relative z-10">
                        <div className="flex items-center gap-4">
                           <div className="text-3xl">{s.icon}</div>
                           <h4 className="text-xl font-black italic uppercase">{s.name}</h4>
                        </div>
-                       <button 
-                          onClick={() => {
-                            setActiveSymbol(s.id);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
+                       <Link 
+                          href="/"
                           className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-background transition-all"
                        >
                           <TrendingUp size={20} />
-                       </button>
+                       </Link>
                     </div>
                     <div className="h-48 rounded-2xl overflow-hidden border border-white/5">
                        <TradingViewWidget symbol={s.id} type="mini-chart" locale={locale} />
@@ -341,59 +178,6 @@ export default function Home() {
       </main>
 
       <Footer />
-    </div>
-  );
-}
-
-function StatCard({ label, val, icon, color }: { label: string, val: string, icon: any, color: string }) {
-   return (
-      <div className="bg-surface/20 p-10 rounded-[3rem] border border-surface text-center space-y-4 hover:border-primary/20 transition-all hover:shadow-2xl group">
-         <div className={`w-16 h-16 rounded-2xl bg-background border border-surface flex items-center justify-center mx-auto ${color} group-hover:scale-110 transition-transform`}>
-            {icon}
-         </div>
-         <div className="space-y-1">
-            <h4 className="text-2xl font-black italic tracking-tighter">{val}</h4>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground-muted">{label}</p>
-         </div>
-      </div>
-   );
-}
-
-
-function TradingChartAnimation() {
-  return (
-    <div className="flex gap-4 items-end w-full h-full p-20 select-none opacity-20">
-       {[...Array(60)].map((_, i) => (
-         <motion.div 
-            key={i}
-            className={`w-6 rounded-t-3xl ${i % 8 === 0 ? 'bg-rose-500/30' : 'bg-primary/20'}`}
-            animate={{ 
-              height: [100, 300, 150, 400, 200][i % 5] + "px"
-            }}
-            transition={{ 
-              duration: 4 + (i * 0.1), 
-              repeat: Infinity, 
-              repeatType: "reverse",
-              ease: "circInOut"
-            }}
-         />
-       ))}
-    </div>
-  )
-}
-
-function FeatureCard({ icon, title, description, isRtl }: { icon: React.ReactNode, title: string, description: string, isRtl: boolean }) {
-  return (
-    <div className={`p-10 rounded-[3rem] bg-surface/30 backdrop-blur-xl border border-surface hover:border-primary/40 transition-all duration-500 flex flex-col items-start ${isRtl ? 'text-right' : 'text-left'} group hover:-translate-y-4 hover:shadow-[0_30px_60px_rgba(0,0,0,0.3)] relative overflow-hidden`}>
-      <div className={`absolute top-0 ${isRtl ? 'left-0' : 'right-0'} w-32 h-32 bg-primary/5 rounded-full blur-3xl ${isRtl ? '-ml-16' : '-mr-16'} -mt-16 group-hover:bg-primary/10 transition-colors`}></div>
-      
-      <div className={`w-20 h-20 rounded-[2rem] bg-background border border-surface flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-500 shadow-2xl relative z-10 text-primary ${isRtl ? 'mr-auto ml-0' : ''}`}>
-        {icon}
-      </div>
-      <div className="relative z-10 space-y-4 w-full">
-         <h3 className="text-2xl font-black italic tracking-tighter uppercase">{title}</h3>
-         <p className="text-foreground-muted leading-relaxed font-medium italic">{description}</p>
-      </div>
     </div>
   );
 }
