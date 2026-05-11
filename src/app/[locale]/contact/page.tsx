@@ -54,6 +54,14 @@ export default function ContactPage() {
       href: t('tiktok_link')
     },
     {
+      title: t('tiktok') + " (2)",
+      desc: "@kero1trade",
+      icon: <Video size={24} />,
+      color: "text-foreground",
+      bg: "bg-foreground/5",
+      href: t('tiktok_link_2')
+    },
+    {
       title: t('youtube'),
       desc: "Kero Trade",
       icon: <Youtube size={24} />,

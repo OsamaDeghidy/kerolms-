@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { Twitter, Send, Youtube, Globe } from "lucide-react";
+import { Send, Youtube, Globe, Music } from "lucide-react";
 
 export default async function Footer() {
   const t = await getTranslations('Navigation');
@@ -25,9 +25,10 @@ export default async function Footer() {
                    {t('mission')}
                 </p>
                 <div className="flex gap-4">
-                   <SocialLink icon={<Twitter size={20} />} href="#" />
-                   <SocialLink icon={<Send size={20} />} href="#" />
-                   <SocialLink icon={<Youtube size={20} />} href="#" />
+                   <SocialLink icon={<Send size={20} />} href="https://t.me/kerotrade" />
+                   <SocialLink icon={<Youtube size={20} />} href="https://youtube.com/@kerotrade" />
+                   <SocialLink icon={<Music size={20} />} href="https://www.tiktok.com/@kerotrade" />
+                   <SocialLink icon={<Music size={20} />} href="https://www.tiktok.com/@kero1trade" />
                 </div>
              </div>
 

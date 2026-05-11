@@ -124,7 +124,7 @@ export default async function Home() {
                           <h4 className="text-xl font-black italic uppercase">{s.name}</h4>
                        </div>
                        <Link 
-                          href="/"
+                          href="/analyses"
                           className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-background transition-all"
                        >
                           <TrendingUp size={20} />
